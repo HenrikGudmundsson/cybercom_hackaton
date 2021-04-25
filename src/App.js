@@ -24,10 +24,18 @@ const App = () => {
    * Retrieves reviews.
    */
   const getReviews = async () => {
-    const querySnapshot = await firestore.collection(TEAM_NAME).get();
-    querySnapshot.forEach((fetchedReview) => {
-      setReviews((reviews) => [...reviews, fetchedReview.data()]);
-    });
+    try {
+      const querySnapshot = await firestore.collection(TEAM_NAME).get();
+      querySnapshot.forEach((fetchedReview) => {
+        setReviews((reviews) => [
+          ...reviews,
+          { docId: fetchedReview.id, data: fetchedReview.data() },
+        ]);
+      });
+      console.log("Retrieved the reviews successfully");
+    } catch (error) {
+      console.error("Something went wrong with fetching the reviews: ", error);
+    }
   };
 
   /**
@@ -44,19 +52,51 @@ const App = () => {
       });
       console.log("New review has been added");
     } catch (error) {
-      console.log("Something went wrong with adding the review: ", error);
+      console.error("Something went wrong with adding the review: ", error);
+    }
+  };
+
+  /**
+   * Update a review.
+   */
+  const updateReview = async (docId) => {
+    try {
+      const ref = firestore.collection(TEAM_NAME).doc(docId);
+      await ref.update({
+        name: "Something amazing",
+      });
+      console.log("Review was updated successfully");
+    } catch (error) {
+      console.error("Something went wrong with the update: ", error);
+    }
+  };
+
+  /**
+   * Removes a review from a collection.
+   */
+  const removeReview = async (docId) => {
+    try {
+      await firestore.collection(TEAM_NAME).doc(docId).delete();
+
+      console.log("The review was removed successfully");
+    } catch (error) {
+      console.error("Something went wrong with removing the review: ", error);
     }
   };
 
   return (
     <div className="App">
       {reviews.map((review, index) => {
+        const { data } = review;
         return (
           <div key={index}>
-            <p>Namse: {review.name}</p>
-            <p>IMG: {review.img}</p>
-            <p>Description: {review.description}</p>
-            <p>Rating {review.rating} / 10</p>
+            <p>Namse: {data.name}</p>
+            <p>IMG: {data.img}</p>
+            <p>Description: {data.description}</p>
+            <p>Rating {data.rating} / 10</p>
+            <button onClick={() => removeReview(review.docId)}>
+              Remove me
+            </button>
           </div>
         );
       })}
