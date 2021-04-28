@@ -1,6 +1,8 @@
 import "./App.css";
 import firestore from "./config/firestore";
 import { useEffect, useState } from "react";
+import YMAL from "./YMAL";
+
 
 /**
  * Switch out this const against your team name.
@@ -11,6 +13,7 @@ const TEAM_NAME = "team1-test";
 
 const App = () => {
   const [reviews, setReviews] = useState([]);
+  const [random, setRandom] = useState(null);
 
   /**
    * Updates reviews on load.
@@ -51,6 +54,7 @@ const App = () => {
         rating: "3",
       });
       console.log("New review has been added");
+
     } catch (error) {
       console.error("Something went wrong with adding the review: ", error);
     }
@@ -86,6 +90,7 @@ const App = () => {
 
   return (
     <div className="App">
+      <YMAL />
       {reviews.map((review, index) => {
         const { data } = review;
         return (
