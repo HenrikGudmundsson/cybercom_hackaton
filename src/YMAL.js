@@ -20,11 +20,12 @@ const YMAL = props => {
     const {name, tagline, abv, food_pairing} = data;
 
 
-    return <>
-        <p>You Might Also Like</p>
-        <p>{name} {abv}%</p>
-        <p>{tagline}</p>
-    </>
+    return <div style={{margin: '24px 0', borderTop: '1px solid #cecece', borderBottom: '1px solid #cecece', padding:'8px'}}>
+        <h3>You Might Also Like</h3>
+        <p style={{margin: '4px 0'}}><b>{name} {abv}%</b></p>
+        <p style={{margin: '4px 0'}}>{tagline}</p>
+        <p style={{margin: '4px 0'}}><b>Paired with</b> {food_pairing?.join(', ')}</p>
+    </div>
 }
 
 export default YMAL;

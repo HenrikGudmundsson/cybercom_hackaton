@@ -13,7 +13,7 @@ const TEAM_NAME = "team1-test";
 
 const App = () => {
   const [reviews, setReviews] = useState([]);
-  const [random, setRandom] = useState(null);
+  const [created, setCreated] = useState(false);
 
   /**
    * Updates reviews on load.
@@ -54,6 +54,7 @@ const App = () => {
         rating: "3",
       });
       console.log("New review has been added");
+      setCreated(true);
 
     } catch (error) {
       console.error("Something went wrong with adding the review: ", error);
@@ -90,7 +91,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <YMAL />
+      {created && <YMAL />}
       {reviews.map((review, index) => {
         const { data } = review;
         return (
