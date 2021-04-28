@@ -1,8 +1,7 @@
 import "./App.css";
 import firestore from "./config/firestore";
-import { useEffect, useState } from "react";
 import YMAL from "./YMAL";
-
+import { useEffect, useState, useRef } from "react";
 
 /**
  * Switch out this const against your team name.
@@ -23,6 +22,8 @@ const App = () => {
     getReviews();
   }, []);
 
+  const [ratingState, setRatingState] = useState();
+
   /**
    * Retrieves reviews.
    */
@@ -41,21 +42,30 @@ const App = () => {
     }
   };
 
+  const inputName = useRef(null);
+  const inputImg = useRef(null);
+  const inputDescription = useRef(null);
+  const ratings = useRef(null);
+
   /**
    * Sets a review with dummy data.
    * TIP: Switch it out for user input.
    */
   const createReview = async () => {
+    console.log(inputName);
+
+    const formData = {
+      name: inputName.current.value,
+      img: inputImg.current.value,
+      description: inputDescription.current.value,
+      rating: ratingState,
+    };
+
     try {
-      await firestore.collection(TEAM_NAME).add({
-        name: "test2",
-        img: "test2",
-        description: "test2",
-        rating: "3",
-      });
+      await firestore.collection(TEAM_NAME).add(formData);
+      console.log(formData);
       console.log("New review has been added");
       setCreated(true);
-
     } catch (error) {
       console.error("Something went wrong with adding the review: ", error);
     }
@@ -76,6 +86,122 @@ const App = () => {
     }
   };
 
+  const setRating = (rating) => {
+    console.log(rating);
+    setRatingState(rating);
+
+    [...ratings.current.children].forEach((cur, i) => {
+      if (i < rating) {
+        cur.classList.add("active");
+      }
+    });
+  };
+
+  const CreateReviewForm = () => {
+    return (
+      <>
+        <div className="form--wrapper">
+          <div className="form--row">
+            Name:
+            <input type="text" ref={inputName}></input>
+          </div>
+          <div className="form--row">
+            Image: <input type="file" ref={inputImg}></input>
+          </div>
+          <div className="form--row">
+            Description: <input type="text" ref={inputDescription}></input>
+          </div>
+          <div className="form--row">
+            Rating:{" "}
+            <span ref={ratings}>
+              <span
+                className="rating-point rating-1"
+                onClick={() => {
+                  setRating(1);
+                }}
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(2);
+                }}
+                className="rating-point rating-2"
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(3);
+                }}
+                className="rating-point rating-3"
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(4);
+                }}
+                className="rating-point rating-4"
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(5);
+                }}
+                className="rating-point rating-5"
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(6);
+                }}
+                className="rating-point rating-6"
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(7);
+                }}
+                className="rating-point rating-7"
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(8);
+                }}
+                className="rating-point rating-8"
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(9);
+                }}
+                className="rating-point rating-9"
+              >
+                🍺
+              </span>
+              <span
+                onClick={() => {
+                  setRating(10);
+                }}
+                className="rating-point rating-10"
+              >
+                🍺
+              </span>
+            </span>
+          </div>
+        </div>
+        <button onClick={createReview}>Create review</button>
+      </>
+    );
+  };
+
   /**
    * Removes a review from a collection.
    */
@@ -91,12 +217,13 @@ const App = () => {
 
   return (
     <div className="App">
+      <CreateReviewForm />
       {created && <YMAL />}
       {reviews.map((review, index) => {
         const { data } = review;
         return (
           <div key={index}>
-            <p>Namse: {data.name}</p>
+            <p>Name: {data.name}</p>
             <p>IMG: {data.img}</p>
             <p>Description: {data.description}</p>
             <p>Rating {data.rating} / 10</p>
@@ -106,8 +233,6 @@ const App = () => {
           </div>
         );
       })}
-
-      <button onClick={createReview}>Create review</button>
     </div>
   );
 };

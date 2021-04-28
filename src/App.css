@@ -3,3 +3,22 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.form--wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 50rem;
+  background-color: aqua;
+  padding: 2rem;
+}
+
+.rating-point {
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 2rem;
+  opacity: 30%;
+}
+
+.rating-point.active {
+  opacity: 100%;
+}
