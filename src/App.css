@@ -16,9 +16,9 @@
   cursor: pointer;
   padding: 0.5rem;
   font-size: 2rem;
-  opacity: 30%;
+  opacity: .3;
 }
 
 .rating-point.active {
-  opacity: 100%;
+  opacity: 1;
 }
